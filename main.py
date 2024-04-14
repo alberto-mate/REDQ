@@ -8,32 +8,39 @@ import time
 
 from replay_memory import ReplayMemory
 from utils import plot_stats, set_seed
-from REDQ import REDQ, SAC_REDQ
-import sys
+from REDQ import REDQ
+
+from args import OPT as opt
 ### Configuration ###
 render = 'rgb_array' # 'human', 'rgb_array' or 'none'
-env_name = "LunarLander-v2"
+env_name = opt.env
 load_checkpoint = None # f'outputs/{env_name}/experiment_1'
-total_timesteps = 200_000
+total_timesteps = opt.total_timesteps
 learning_starts = 5_000
-seed = sys.argv[1] if len(sys.argv) > 1 else 0
+seed = opt.seed
+exp_name = opt.exp_name
+kwargs = opt.kwargs if opt.kwargs is not None else {}
 #####################
 
+
+
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
+print(f"Using {device} device")
 evaluate = load_checkpoint is not None
 set_seed(seed)
 print(f"Rendering with {render} mode")
-env = gym.make(env_name, render_mode=render, continuous=True)
+env_kwargs = dict(continuous=True) if 'LunarLander' in env_name else {}
+env = gym.make(env_name, render_mode=render, **env_kwargs)
 memory = ReplayMemory(capacity=100_000, seed=seed)
-agent = SAC_REDQ(state_dim=env.observation_space.shape[0], 
+agent = REDQ(state_dim=env.observation_space.shape[0], 
             action_dim=env.action_space.shape[0],
             max_action=env.action_space.high[0],
-            device=device)
+            device=device, **kwargs)
 
 
 
 if not evaluate:
-    output_dir = f'outputs/{env_name}/'
+    output_dir = f'outputs/{env_name}/{exp_name}'
     id_experiment = len(os.listdir(output_dir)) + 1 if os.path.exists(output_dir) else 1
     output_dir = os.path.join(output_dir, f'experiment_{id_experiment}')
     os.makedirs(output_dir, exist_ok=True)
