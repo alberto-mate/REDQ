@@ -1,2 +1,4 @@
 **/__pycache__/**
-outputs
+video_train
+actor
+critic_*
