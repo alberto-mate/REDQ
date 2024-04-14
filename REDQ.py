@@ -16,7 +16,7 @@ class REDQ:
         self.state_dim = state_dim
         self.action_dim = action_dim
         
-        print(f"Runing {self.__class__.__name__} with N={N}, G={G}, M={M}")
+        print(f"Runing {self.__class__.__name__} with N={N}, G={G}, M={M} and alpha={alpha}")
         
         self.gamma = gamma 
         self.tau = tau

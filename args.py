@@ -6,6 +6,16 @@ class KeyValueAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         # Split values into key-value pairs
         items = [item.split('=') for item in values]
+        
+        # Turn values into integers or floats if possible
+        for i, (key, value) in enumerate(items):
+            try:
+                items[i] = (key, int(value))
+            except ValueError:
+                try:
+                    items[i] = (key, float(value))
+                except ValueError:
+                    pass
         # Construct dictionary
         setattr(namespace, self.dest, dict(items))
 
