@@ -7,7 +7,6 @@ from gymnasium.wrappers import RecordVideo
 import time
 
 from replay_memory import ReplayMemory
-from SAC import SAC
 from utils import plot_stats, set_seed
 from REDQ import REDQ, SAC_REDQ
 import sys
