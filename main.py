@@ -31,6 +31,7 @@ set_seed(seed)
 print(f"Rendering with {render} mode")
 env_kwargs = dict(continuous=True) if 'LunarLander' in env_name else {}
 env = gym.make(env_name, render_mode=render, **env_kwargs)
+env.action_space.seed(seed)
 memory = ReplayMemory(capacity=100_000, seed=seed)
 agent = REDQ(state_dim=env.observation_space.shape[0], 
             action_dim=env.action_space.shape[0],
@@ -65,7 +66,7 @@ best_score = -np.inf
 start_time = time.time()
 while current_timestep < total_timesteps:
     n_episodes += 1
-    obs, _ = env.reset(seed=seed)
+    obs, _ = env.reset(seed=seed+n_episodes)
     done = False
     score = 0
     length_episode = 0
