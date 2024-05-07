@@ -2,6 +2,9 @@ import random
 import numpy as np
 
 class ReplayMemory:
+    """
+    Replay memory buffer to store the transitions
+    """
     def __init__(self, capacity, seed):
         random.seed(seed)
         self.capacity = capacity

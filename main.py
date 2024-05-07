@@ -53,6 +53,7 @@ else:
 if render == 'rgb_array':
     video_name = 'video_eval' if evaluate else 'video_train'
     record_freq = 1 if evaluate else 40
+    # Record video every 40 episodes during training 
     env = RecordVideo(env, os.path.join(output_dir, video_name), disable_logger=True, episode_trigger=lambda x: x % record_freq == 0)
     print(f"Recording video in {output_dir}")
     
@@ -66,16 +67,16 @@ best_score = -np.inf
 start_time = time.time()
 while current_timestep < total_timesteps:
     n_episodes += 1
-    obs, _ = env.reset(seed=seed+n_episodes)
+    obs, _ = env.reset(seed=seed+n_episodes) # Reset the environment with the seed
     done = False
     score = 0
     length_episode = 0
     while not done:
         if current_timestep <= learning_starts:
-            action = env.action_space.sample()
+            action = env.action_space.sample() # Sample random action during the initial learning phase
         else:
             with torch.no_grad():
-                action = agent.predict(obs, deterministic=evaluate)
+                action = agent.predict(obs, deterministic=evaluate) # Predict the action using the actor network
                 
         # Perform the action
         next_obs, reward, terminated, truncated, info = env.step(action)
@@ -103,6 +104,7 @@ while current_timestep < total_timesteps:
         if not evaluate:
             agent.save_checkpoint(output_dir)
     
+    # Log the stats
     if n_episodes % 1 == 0:
         print(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time() - start_time))}]", end=' ')
         print(f'Ep: {n_episodes} | t: {current_timestep}/{total_timesteps} | Score: {score:.2f} | Avg Score: {avg_score:.2f}')
