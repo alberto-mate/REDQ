@@ -1,0 +1,6 @@
+time,LunarLander-v2,BipedalWalker-v3
+"SAC_alpha0.05",00:39:41,01:28:25
+"SAC_alpha0.2",00:39:24,01:24:53
+"REDQ_alpha0.05_N5_G5_M2",02:54:27,06:36:31
+"REDQ_alpha0.2_N5_G5_M2",02:52:35,06:33:12
+"REDQ_alpha0.05_N10_G20_M2",15:09:53,35:37:43
